@@ -14,9 +14,9 @@ export default Ember.Component.extend({
 
       const category = 'participant-page';
       const action = 'edit';
-      // const label = this.participant.firstName;
+      const label = this.participant.firstName;
 
-      Ember.get(this, 'metrics').trackEvent({ category, action });
+      Ember.get(this, 'metrics').trackEvent({ category, action, label });
     },
     stopEditing() {
    	  this.set('isEditing', false);
