@@ -133,3 +133,8 @@ a.sub-navigation:hover {
 .content {
     float: right;
 }
+
+
+.ace-editor {
+    min-height: 200px;
+}

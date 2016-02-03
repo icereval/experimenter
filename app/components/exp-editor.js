@@ -19,6 +19,15 @@ export default Ember.Component.extend({
             this.set('selectedFrame', 0);
         }
     }.on('didReceiveAttrs'),
+    selectedFrameData: Ember.computed('frames', 'selectedFrame', function() {
+        var frames = this.get('frames');
+        var selectedFrame = this.get('selectedFrame');
+
+        var frame = frames[selectedFrame];                
+        var Component = this.container.lookup(`component:exp-${frame.type}`);
+        var params = Component.setupParams(frame);
+        return JSON.stringify(params, null, 4);
+    }),
     actions: {
         addComponent() {
             var frames = this.get('frames');
@@ -26,6 +35,6 @@ export default Ember.Component.extend({
         },
         selectFrame: function(index) {
             this.set('selectedFrame', index);
-        }        
+        }
     }
 });

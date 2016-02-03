@@ -13,6 +13,7 @@
   </div>  
 </div>
 <div class="col-md-9 panel">
-  <h3> json editor </h3>
+  {{ ace-editor value=selectedFrameData aceInit=aceInit }}
+  <hr />
   {{ exp-player frames=frames frameIndex=selectedFrame }}
 </div>
