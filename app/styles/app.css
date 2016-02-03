@@ -115,3 +115,14 @@ a.sub-navigation:hover {
 	color: orange;
 	text-decoration: none;
 }
+.list-frame {
+    width: 100%;
+}
+.list-frame.selected {
+    background-color: #F1F1F1 !important;
+}
+
+.list-frame span.index {
+    font-size: 250%;
+    padding: 3px;
+}
