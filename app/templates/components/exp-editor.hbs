@@ -1,0 +1,19 @@
+<div class="col-md-3">
+  {{#each frames as |frame index|}}
+    {{ exp-editor-frame frame=frame index=index selectedFrame=selectedFrame selectFrame=(action 'selectFrame') }}
+  {{/each}}
+  <div class="panel btn pull-right" style="padding: 18px; width: 100%;"
+    {{ action 'addComponent' }}
+    {{ bindAttr class="preventAddComponent:disabled:" }}>
+    <span class="lead">
+      Add
+      <span class="visible-lg-inline visible-md-inline">component</span>
+      <i class="fa fa-plus"></i>
+    </span>
+  </div>  
+</div>
+<div class="col-md-9 panel">
+  {{ ace-editor value=selectedFrameData aceInit=aceInit }}
+  <hr />
+  {{ exp-player frames=frames frameIndex=selectedFrame }}
+</div>

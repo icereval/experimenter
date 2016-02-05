@@ -3,7 +3,13 @@
     "title": "A Test Experiment",
     "description": "This is just for testing.",
     "active": true,
-    "structure": []
+    "structure": [
+        {
+            "id": "pre-consent",
+            "type": "consent",
+            "body": "Hello world"
+        }        
+    ]
 }, {
     "id": "test1",
     "title": "A Test Experiment",
