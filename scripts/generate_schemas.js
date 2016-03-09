@@ -130,11 +130,11 @@ var SESSION = {
             },
             feedback: {
                 "id": "feedback",
-                "type": "string"
+                "type": ["string", "null"]
             },
             "hasReadFeedback": {
                 "id": "hasReadFeedback",
-                "type": "boolean"
+                "type": ["boolean", "null"]
             }
         },
         "required": [
