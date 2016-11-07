@@ -3,7 +3,7 @@ import Ember from 'ember';
 // h/t: http://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
 function makeId(len) {
     var text = '';
-    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var possible = '0123456789';
 
     for (var i = 0; i < len; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -32,13 +32,20 @@ export default Ember.Component.extend({
     _generate(batchSize, tag) {
         var ret = [];
         for (let i = 0; i < batchSize; i++) {
-            ret.push(`${makeId(5)}${tag ? `-${tag}` : ''}`);
+            var generate = true;
+            while (generate) {
+                var id = `${makeId(5)}${tag ? `-${tag}` : ''}`;
+                if (!ret.contains(id) || !this.get('store').peekRecord('account', id)) {
+                    ret.push(id);
+                    generate = false;
+                }
+            }
         }
         return ret;
     },
     generatedParticipants: Ember.computed('batchSize', 'tag', function() {
         var tag = this.get('tag');
-        var batchSize = Math.min(parseInt(this.get('batchSize')) || 0, 10);
+        var batchSize = parseInt(this.get('batchSize')) || 0;
         return this._generate(batchSize, tag);
     }),
 
@@ -57,9 +64,7 @@ export default Ember.Component.extend({
                 this.set('createdAccounts', []);
             });
 
-            var tag = this.get('tag');
-            var batchSize = parseInt(this.get('batchSize')) || 0;
-            var accounts = this._generate(batchSize, tag);
+            var accounts = this.get('generatedParticipants');
             var store = this.get('store');
 
             var extra = {};

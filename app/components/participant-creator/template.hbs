@@ -78,9 +78,6 @@
             <strong>
                 Preview:
             </strong>
-            <small class="text-muted">
-                showing up to the first ten
-            </small>
         </p>
         <div class="preview-table-wrapper">
             <table class="table table-string preview-table">
@@ -103,7 +100,7 @@
                     {{#each generatedParticipants as |id index|}}
                         <tr>
                             <td>
-                                {{index}}
+                                {{add index 1}}
                             </td>
                             <td>
                                 {{id}}
