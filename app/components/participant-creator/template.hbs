@@ -45,7 +45,7 @@
                                     <label class="text-muted">
                                         Use as password?
                                     </label>
-                                    <input name="useAsPassword" onchange={{action (action 'useAsPassword' item.key) value="target.checked"}} type="radio" />
+                                    <input name="useAsPassword" checked={{if useAsPassword true}} onchange={{action (action 'useFieldAsPassword' item.key) value="target.checked"}} type="checkbox" />
                                 </div>
                                 <div class="col-md-1">
                                     <button class="btn btn-sm btn-warning" {{action 'removeExtraField' item.key}}>X</button>
@@ -120,3 +120,14 @@
         </div>
     </div>
 </div>
+
+{{#if invalidPassword}}
+  {{#bs-modal header=false body=false footer=false closedAction=(action 'toggleInvalidPassword')}}
+    {{#bs-modal-header closeButton=true}}
+      <h4>Password Required</h4>
+    {{/bs-modal-header}}
+    {{#bs-modal-body}}
+      Please enter a value to be used as the password.
+    {{/bs-modal-body}}
+  {{/bs-modal}}
+{{/if}}

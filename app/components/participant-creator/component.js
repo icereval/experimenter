@@ -19,6 +19,7 @@ export default Ember.Component.extend({
     extra: null,
     nextExtra: '',
     useAsPassword: null,
+    invalidPassword: false,
 
     creating: false,
     createdAccounts: [],
@@ -68,11 +69,24 @@ export default Ember.Component.extend({
             this.get('extra').forEach(item => {
                 if (item.key === useAsPassword) {
                     password = Ember.get(item, 'value');
+                    if (!password || password === '') {
+                        this.set('invalidPassword', true);
+                    }
                 }
                 extra[item.key] = item.value;
             });
+            if (this.get('invalidPassword')) {
+                this.set('creating', false);
+                return;
+            }
             if (!useAsPassword) {
                 password = makeId(10);
+                this.get('extra').pushObject({
+                    key: 'password',
+                    value: password
+                });
+                extra['password'] = password;
+                this.set('useAsPassword', 'password');
             }
             Ember.run.later(this, () => {
                 this.set('_creatingPromise', Ember.RSVP.allSettled(
@@ -93,6 +107,10 @@ export default Ember.Component.extend({
                     Ember.run.later(this, () => {
                         this.set('creating', false);
                         this.send('downloadCSV');
+                        if (this.get('useAsPassword', 'password')) {
+                            this.send('removeExtraField', 'password');
+                            this.set('useAsPassword', null);
+                        }
                     }, 100);
                 }));
             }, 50);
@@ -109,7 +127,7 @@ export default Ember.Component.extend({
             var extra = this.get('extra');
             this.set('extra', extra.filter((item) => item.key !== field));
         },
-        useAsPassword(field, checked) {
+        useFieldAsPassword(field, checked) {
             if (checked) {
                 this.set('useAsPassword', field);
             } else {
@@ -121,6 +139,9 @@ export default Ember.Component.extend({
                 type: 'text/plain;charset=utf-8'
             });
             window.saveAs(blob, 'participants.csv');
+        },
+        toggleInvalidPassword: function() {
+            this.toggleProperty('invalidPassword');
         }
     }
 });
