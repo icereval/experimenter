@@ -57,8 +57,8 @@ export default Ember.Component.extend({
     // Recognized data formats. Hash of form {displayValue: Extension} items
     dataFormats: {
         JSON: 'JSON',
-        TSV: 'TSV',
-        'TSV (for ISP)': 'TSV',
+        CSV: 'CSV',
+        'CSV (for ISP)': 'CSV'
     },
 
     processedData: Ember.computed('data', 'dataFormat', function() {
@@ -82,44 +82,54 @@ export default Ember.Component.extend({
     _convertToJSON(dataArray) {
         return JSON.stringify(dataArray, null, 4);
     },
-    _convertToTSV(dataArray) {
+    _convertToCSV(dataArray) {
         // Flatten the dictionary keys for readable column headers
         let squashed = dataArray.map((item => squash(item)));
 
         var fields = Object.keys(squashed[0]);
-        var tsv = [fields.join('\t')];
+        var csv = [fields.join(',')];
 
         squashed.forEach((item) => {
             var line = [];
             fields.forEach(function(field) {
-                line.push(JSON.stringify(item[field]));
+                var value = JSON.stringify(item[field]).replace(/\\"/g, '""');
+                line.push(value);
             });
-            tsv.push(line.join('\t'));
+            csv.push(line.join(','));
         });
-        tsv = tsv.join('\r\n');
-        return tsv;
+        csv = csv.join('\r\n');
+        return csv;
     },
     _convertToISP(dataArray) {
-        // ISP-specific TSV file format
+        // ISP-specific CSV file format
 
         // First custom field mapping...
 
-        // Then serialize to TSV
+        // Then serialize to CSV
         dataArray = dataArray.map((record) => {
             let newRecord = {};
             for (let frameId of Object.keys(record.expData)) {
-                newRecord[frameId] = record.expData[frameId].responses || {};
+                let responses = record.expData[frameId].responses || {};
+                for (let question of Object.keys(responses)) {
+                    if (frameId === '3-3-rating-form') {
+                        for (let item of Object.keys(responses[question])) {
+                            newRecord[item] = responses[question][item];
+                        }
+                    } else {
+                        newRecord[question] = responses[question];
+                    }
+                }
             }
             return newRecord;
         });
-        return this._convertToTSV(dataArray);
+        return this._convertToCSV(dataArray);
     },
     convertToFormat(dataArray, format) {
         if (format === 'JSON') {
             return this._convertToJSON(dataArray);
-        } else if (format === 'TSV') {
-            return this._convertToTSV(dataArray);
-        } else if (format === 'TSV (for ISP)') {
+        } else if (format === 'CSV') {
+            return this._convertToCSV(dataArray);
+        } else if (format === 'CSV (for ISP)') {
             return this._convertToISP(dataArray);
         } else {
             throw 'Unrecognized file format specified';
