@@ -6,7 +6,7 @@
 Welcome to Experimenter's documentation!
 ==========================================
 
-**If you are using Experimenter for Lookit studies, please see the updated `Lookit documentation <http://lookit.readthedocs.io/en/latest/>`_ instead.**
+**If you are using Experimenter for Lookit studies, please see the updated** `Lookit documentation <http://lookit.readthedocs.io/en/latest/>`_ instead.
 
 **NOTE: This documentation is a work in progress**
 
