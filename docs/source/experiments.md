@@ -125,7 +125,9 @@ This JSON document describes a fairly simple experiment. It has three basic part
             }
         }
     }
-}```
+}
+
+```
 
 
 ### A Lookit study schema
